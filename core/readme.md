@@ -1,7 +1,3 @@
-# http-kafka-producer
-Highly scaled micro Http service/layer between events and kafka cluster. Service can be started with config driven port And user has flexibility to plugin transformation
- logic (from http request body to required object) in middle. Every API can write to same of different kafka cluster.
-
 # vert.x architecture
 Vert.x has an event-driven architecture and implements the reactor pattern to handle concurrent requests. So the goal is to receive concurrent requests and to put them on a queue.
 An event-loop will dequeue each of these events and dispatch them sequentially to an handler. The process of these events by the event loop is synchronous – one by one.  The handlers

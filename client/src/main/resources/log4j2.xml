@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Note: add following java options to get best log4j performance and optimization.
+#setting to make access log Async
+JAVA_OPTS="${JAVA_OPTS} -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+#log4j garbage-free mode
+JAVA_OPTS="${JAVA_OPTS} -Dlog4j2.enable.threadlocals=true -Dlog4j2.enable.direct.encoders=true"
+-->
+<Configuration status="info" monitorInterval="30">
+    <Properties>
+        <Property name="logLocation">/var/log/_PACKAGE_</Property>
+        <Property name="logFormat">[%d{yyyy-MM-dd HH:mm:ss}] [%5p] [%t] [%c{1}] - %m %rEx{10}%n%n</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingRandomAccessFile name="debug" fileName="${logLocation}/debug.log" filePattern="${logLocation}/debug.log-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>${logFormat}</pattern>
+            </PatternLayout>
+
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!--rollover and delete older files (leftover files)-->
+            <DefaultRolloverStrategy max="1" stopCustomActionsOnError="true">
+                <Delete basePath="${logLocation}">
+                    <IfFileName glob="debug.log-*.log.gz">
+                        <IfAccumulatedFileCount exceeds="1"/>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="error" fileName="${logLocation}/error.log" filePattern="${logLocation}/error.log-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>${logFormat}</pattern>
+            </PatternLayout>
+            <ThresholdFilter level="warn"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!--rollover and delete older files (leftover files)-->
+            <DefaultRolloverStrategy max="1" stopCustomActionsOnError="true">
+                <Delete basePath="${logLocation}">
+                    <IfFileName glob="error.log-*.log.gz">
+                        <IfAccumulatedFileCount exceeds="1"/>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- %m: application supplied message, which in case of jetty is {ip - - [time] "uri" status responseBytes responseTime}-->
+        <RollingRandomAccessFile name="access" fileName="${logLocation}/access.log" filePattern="${logLocation}/access.log-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!--rollover and delete older files (leftover files)-->
+            <DefaultRolloverStrategy max="1" stopCustomActionsOnError="true">
+                <Delete basePath="${logLocation}">
+                    <IfFileName glob="access.log-*.log.gz">
+                        <IfAccumulatedFileCount exceeds="1"/>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logFormat}"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="core.logger.VertxLoggerHandler" level="INFO" additivity="false">
+            <AppenderRef ref="access"/>
+        </Logger>
+
+        <Logger name="io.vertx.core.net.impl.ConnectionBase" level="FATAL" additivity="false">
+            <AppenderRef ref="error"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="debug"/>
+            <AppenderRef ref="error"/>
+        </Root>
+    </Loggers>
+</Configuration>

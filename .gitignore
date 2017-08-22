@@ -1,0 +1,13 @@
+# files
+*.class
+
+# package files
+*.iws
+*.ipr
+*.iml
+
+# directories
+.idea/
+target/
+.vertx/
+file-uploads/

@@ -1,7 +1,7 @@
-package client.transformer;
+package app.transformer;
 
-import client.model.SampleEvent;
-import client.model.Constants;
+import app.model.SampleEvent;
+import app.model.Constants;
 import core.client.RequestTransformer;
 import core.model.KafkaRecord;
 import core.util.VertxUtil;

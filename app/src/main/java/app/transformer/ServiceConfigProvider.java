@@ -1,4 +1,4 @@
-package client.transformer;
+package app.transformer;
 
 import core.client.ServiceConfig;
 

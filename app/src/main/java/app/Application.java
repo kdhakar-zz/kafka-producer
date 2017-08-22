@@ -1,7 +1,7 @@
-package client;
+package app;
 
-import client.transformer.ServiceConfigProvider;
-import client.transformer.VertxConfigProvider;
+import app.transformer.ServiceConfigProvider;
+import app.transformer.VertxConfigProvider;
 import core.KafkaVerticle;
 import core.exception.ServiceException;
 import core.metrics.MetricManager;

@@ -1,4 +1,4 @@
-package client.model;
+package app.model;
 
 /**
  * @author : komal.nagar

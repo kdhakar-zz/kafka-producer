@@ -1,7 +1,7 @@
-package client.util;
+package app.util;
 
 
-import client.model.Constants;
+import app.model.Constants;
 import core.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

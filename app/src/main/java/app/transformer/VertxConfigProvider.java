@@ -1,6 +1,6 @@
-package client.transformer;
+package app.transformer;
 
-import client.model.SampleEvent;
+import app.model.SampleEvent;
 import core.client.VertxConfig;
 import core.exception.ServiceException;
 import core.model.HandlerProperty;
